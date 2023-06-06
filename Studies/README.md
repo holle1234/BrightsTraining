@@ -1,1 +1,1 @@
-Includes exercises made during true study period
+Includes exercises made during true study period.
