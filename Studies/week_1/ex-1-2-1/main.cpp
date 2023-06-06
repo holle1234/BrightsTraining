@@ -1,74 +1,34 @@
 #include <iostream>
 #include <string>
-#include <vector>
 
 
-/*
-    A student database program. 
-    The program will ask the user for how many students the user wants to input.
-    For each student the program will store the students name, age and grade.
-    The program will then print out the average grade of the class and the student with the highest grade.
-*/
+
+//Program to reverse string manually without using library functions
 
 
-struct Student{
-    std::string name {""};
-    int age {0};
-    int grade {4};
-};
+std::string reverseString(const std::string& st){
 
-double getMeanGrade(const std::vector<Student>& db){
-    double avgGrade {0.0};
-    for (auto &&i : db){
-        avgGrade += i.grade;
+    std::string reversedString {st};
+    int index {0};
+
+    for (int i = st.length() - 1; i >= 0; i--)
+    {
+        reversedString[index] = st[i];
+        index++;
     }
-
-    return avgGrade / db.size();
-}
-
-Student getBestStudent(const std::vector<Student>& db){
-    // Not optimized for speed eq. not returning index
-    // answers explicitly to "who is the best student?"
-    Student bestStudent {};
-    for (auto &&i : db){
-        if (i.grade > bestStudent.grade){
-            bestStudent = i;
-        }
-    }
-
-    return bestStudent;
+    
+    return reversedString;
 }
 
 
 int main(){
 
-    int numberOfStudents {0};
-    std::vector<Student> db;
+    std::string inputString {};
+    std::cout << "Welcome to reverse string program" << "\n"
+              << "Give string to reverse: ";
 
-    std::cout << "Give number of students to insert: ";
-    std::cin >> numberOfStudents;
-
-    for (size_t i = 0; i < numberOfStudents; i++){
-        Student student {};
-
-        std::cout << "Name: ";
-        std::cin >> student.name;
-
-        std::cout << "Age: ";
-        std::cin >> student.age;
-
-        std::cout << "Grade: ";
-        std::cin >> student.grade;
-
-        db.push_back(student);
-        std::cout << std::endl;
-    }
-
-    std::cout << "Average class grade: " << getMeanGrade(db) << "\n";
-    Student bestStudent = getBestStudent(db);
-    std::cout << "Best student: " << bestStudent.name << " "
-              << "with grade: " << bestStudent.grade << "\n";
-
-
+    std::cin >> inputString;
+    std::cout << "Your string reversed is: "
+              << reverseString(inputString) << "\n";
     return 0;
 }
