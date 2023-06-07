@@ -43,12 +43,16 @@ struct MyTime{
 
 int main(){
 
-    MyTime t1 {14, 0, 4};
+    std::string lol {"sasa:asdf"};
+    lol.
+
+
+/*     MyTime t1 {14, 0, 4};
     MyTime t2 {15, 50, 0};
 
     std::cout << t2.getTimeDelta(t1);
 
     return 0;
-}
+} */
 
 // todo kesken
