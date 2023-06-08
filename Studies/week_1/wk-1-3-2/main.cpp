@@ -1,22 +1,60 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
+
+ /*
+ Flow:
+    if not credentials
+        sign in with id and password
+    else
+        pass id and credentials to db when
+        interacting with functions
+ 
+ */
+
+
+
+// random integer between low and high
+int randomBetween(int low=0, int high=10){
+	std::srand((unsigned) time(NULL));
+	return low + (rand() % high);
+}
+
+// User validation functions
+bool validateName(UserData user){
+    return user.name.length() > 0;
+}
+bool validateAdress(UserData user){
+    return user.address.length() > 0;
+}
+bool validatePhone(UserData user){
+    return user.phone.length() > 0;
+}
+
+
+struct Account{
+    int accountId {-1};
+    double balance {0.0};
+};
 
 
 struct UserData{
 
     int custId {-1};
+    std::string passWord {""};
     std::string name {""};
     std::string address {""};
     std::string phone {""};
-    double balance {0.0};
+    std::map<int, Account> accounts;
 };
 
 
 struct BankDataBase{
     private:
-        std::vector<UserData> db;
+        std::map<int, UserData> db;
+        const UserData emptyUser {};
         int _nextUnusedUserId {-1};
 
         // creates a new user id
@@ -27,39 +65,20 @@ struct BankDataBase{
 
     public:
 
-        // returns account balance
-        double add(UserData user, double amount){
-            return user.balance;
+        // sets new account balance
+        void deposit(int credentials, int id, double amount){
         }
-
-        // returns account balance
-        double withdraw(UserData user, double amount){
-            return user.balance;
+        // sets new account balance
+        void withdraw(int credentials, int id, double amount){
         }
-
-        // returns account balance
-        double checkBalance(UserData user){
-            return user.balance;
-        }
-        // User validation functions
-        bool validateName(UserData user){
-            return user.name.length() > 0;
-        }
-        bool validateAdress(UserData user){
-            return user.address.length() > 0;
-        }
-        bool validatePhone(UserData user){
-            return user.phone.length() > 0;
+        // shows account balance
+        void checkBalance(int credentials, int id){
         }
 
         // fill user data via prompts
-        UserData fillUserData(){
+        int fillUserData(){
+            UserData user {};
 
-        }
-
-        // returns freshly created account
-        UserData createUser(UserData user){
-            
             // check if user is ready to be added
             if (!validateName(user)){
 
@@ -71,34 +90,30 @@ struct BankDataBase{
 
             }
 
-            user.custId = _createUserId();
-
-            return user;
+            // add userid and add user to database
+            int newId {_createUserId()};
+            db[newId] = user;
+            return newId;
         }
 
-        // returns saved user object if found otherwise empty
-        UserData findUser(int userId){
-            const UserData user {};
-
-            for (auto &&i : db){
-                if (userId == i.custId){
-                    return i;
-                }
+        // returns credentials
+        int login(int userId, std::string password){
+            if (db.find(userId) != db.end()){
+                // return credentials
             }
-            
-            return user;
+            // return -1
         }
-
 };
 
 
 
 int main(){
 
+
     bool continueTransactions {true};
     while(continueTransactions){
 
-
+        std::cout << randomBetween(0, 10);
     }
 
     return 0;
