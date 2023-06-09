@@ -1,2 +1,2 @@
 first week study exercises  
-added to make single exercise branches possible
+added this readme to make single exercise branches possible
