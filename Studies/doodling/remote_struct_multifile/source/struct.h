@@ -6,6 +6,7 @@
 struct MyStruct
 {
     int privateVar;
+    // MyStruct structFunc declaration
     void structFunc(std::string);
 };
 
