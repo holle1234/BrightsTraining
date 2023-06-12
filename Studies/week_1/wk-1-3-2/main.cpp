@@ -82,12 +82,8 @@ bool csvWrite(std::string fileName, const csvVector& data, char mode='a'){
     // if file exists we dont want to write header
     bool fileExists {std::filesystem::exists(fileName)};
 
-    // open filestream
-    auto fileMode {std::ios::app}; 
-    if (mode == 'w'){
-        // overwrite previous file
-        fileMode = std::ios::out; 
-    }
+    // open filestream with proper mode
+    auto fileMode = (mode != 'w') ? std::ios::app : std::ios::out;
 
     std::fstream myFile;
     myFile.open(fileName, fileMode);
@@ -97,7 +93,8 @@ bool csvWrite(std::string fileName, const csvVector& data, char mode='a'){
     }
 
     // write header first
-    if (!fileExists){
+    // todo file exist when overwrite
+    if (!fileExists || (mode == 'w')){
         auto lastElement {data[0].rbegin()->first};
         for (auto &&i : data[0]){
             bool isLast {i.first == lastElement};
@@ -257,61 +254,73 @@ struct BankDataBase{
         }
 
         // writes a new client to clients.csv
-        void writeClientToDataBase(Client& client, char mode='a'){
+        void writeClientToDataBase(std::vector<Client>& clients, char mode='a'){
 
             // structure csv-writer accepts
             csvVector ClientData;
+            for (auto &&client : clients){
+                
+                // 1. convert client to map
+                csvMap clientMap{
 
-            // 1. convert client to map
-            csvMap clientMap{
+                    {"custId",   client.custId},
+                    {"passWord", client.passWord},
+                    {"name",     client.name},
+                    {"address",  client.address},
+                    {"phone",    client.phone}
+                };
 
-                {"custId",   client.custId},
-                {"passWord", client.passWord},
-                {"name",     client.name},
-                {"address",  client.address},
-                {"phone",    client.phone}
-            };
+                // 2. add client-map to vector
+                ClientData.push_back(clientMap);
 
-            // 2. add client-map to vector
-            ClientData.push_back(clientMap);
-
-            // 3. write client to file
+            }
+            // 3. write clients to file
             csvWrite(clientsCSV, ClientData, mode);
             
         }
 
         // writes a new account to accounts.csv
-        void writeAccountToDataBase(Account& account, char mode='a'){
+        void writeAccountToDataBase(std::vector<Account>& accounts, char mode='a'){
 
             // structure csv-writer accepts
             csvVector AccountData;
 
-            // 1. convert account to map
-            csvMap accountMap{
+            for (auto &&account : accounts){
+                
+                // 1. convert account to map
+                csvMap accountMap{
 
-                {"custId",    account.custId},
-                {"accountId", account.accountId},
-                {"balance",   std::to_string(account.balance)},
-            };
+                    {"custId",    account.custId},
+                    {"accountId", account.accountId},
+                    {"balance",   std::to_string(account.balance)},
+                };
 
-            // 2. add client-map to vector
-            AccountData.push_back(accountMap);
+                // 2. add client-map to vector
+                AccountData.push_back(accountMap);
 
+            }
             // 3. write client to file
             csvWrite(accountsCSV, AccountData, mode);
         }
 
-
-// todo 
-// rewrite all data with w mode
         // overwrite clients
+        // todo
         void updateDataBase(){
-            for (auto &&cust : db){
-                writeClientToDataBase(cust.second, 'w');
-                for (auto &&i : cust.second.accounts){
-                    writeAccountToDataBase(i.second);
+            std::vector<Client> clientVector;
+            std::vector<Account> accountVector;
+            
+            for (auto &&i : db){
+                Client client {i.second};
+                clientVector.push_back(client);
+
+                for (auto &&c : client.accounts){
+                   accountVector.push_back(c.second); 
                 }
             }
+
+            // overwrite file data
+            writeAccountToDataBase(accountVector, 'w');
+            writeClientToDataBase(clientVector, 'w');
         }
 
         // returns weather theres a logged user
@@ -333,9 +342,11 @@ struct BankDataBase{
                 double amount {depositDialog()};
                 Account& account {user.accounts[accountId]};
                 account.balance += amount;
+                updateDataBase();
                 account.showBalance();
                 continuePrompt();
             }
+            system("clear");
         }
         // sets new account balance
         void withdraw(){
@@ -346,9 +357,11 @@ struct BankDataBase{
                 Account& account {user.accounts[accountId]};
                 account.balance -= amount;
                 account.balance = (account.balance < 0 ) ? 0: account.balance;
+                updateDataBase();
                 account.showBalance();
                 continuePrompt();
             }
+            system("clear");
         }
         // prints balances of all user accounts
         void checkBalance(){
@@ -367,12 +380,15 @@ struct BankDataBase{
 
         // fill user data via prompts
         void addCustomer(Client user){
+
             // add userid and add user to database
             currentUser = _createUserId();
             user.custId = currentUser;
             db[currentUser] = user;
             std::cout << "Welcome " << user.name << "!\n\n";
-            writeClientToDataBase(user);
+
+            std::vector<Client> clientVector {user};
+            writeClientToDataBase(clientVector);
             continuePrompt();
         }
 
@@ -382,7 +398,8 @@ struct BankDataBase{
             Account account {accountId, currentUser, 0.0};
             Client& user {db[currentUser]};
             user.accounts[accountId] = account;
-            writeAccountToDataBase(account);
+            std::vector<Account> accountVector {account};
+            writeAccountToDataBase(accountVector);
 
             std::cout << "Created a new account with id: " << accountId << "\n";
             continuePrompt();
@@ -479,27 +496,22 @@ void createUserDialog(BankDataBase& bankDB){
 
 std::string accountIdDialog(const Client& user){
 
-    int accountId {0};
-    std::map<int, std::string> remappedCopy {};
-
     if(user.accounts.size() == 0){
         std::cout << "You have no accounts, please create one first.:\n\n";
         continuePrompt();
         return "";
     }
-    else std::cout << "You have following accounts:\n";
-    
-    int index {0};
-    // remap account ids so user can pick one with index only
-    for (auto it = user.accounts.begin(); it != user.accounts.end(); it++) {
-        std::cout << index << ") " << it->first << "\n";
-        remappedCopy[index] = it->first;
-        ++index;
-    }
 
-    std::cout << "Which account would you like to use (number): ";
+    std::cout << "You have following accounts:\n";
+    
+    for (auto &&i : user.accounts){
+        std::cout << "account name: " << i.second.accountId << "\n"
+                  << "balance: " << i.second.balance << "e\n\n";
+    }
+    std::string accountId;
+    std::cout << "Which account would you like to use: ";
     std::cin >> accountId;
-    return remappedCopy[accountId];
+    return accountId;
     
 }
 
