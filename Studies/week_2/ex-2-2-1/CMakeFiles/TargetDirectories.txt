@@ -1,0 +1,3 @@
+/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/CMakeFiles/restorant.dir
+/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/CMakeFiles/edit_cache.dir
+/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/CMakeFiles/rebuild_cache.dir
