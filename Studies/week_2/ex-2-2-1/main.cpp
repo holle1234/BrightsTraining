@@ -4,114 +4,110 @@
 #include <iterator>
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
+#include <limits>
+
+#include "src/utils.h"
 
 
-struct Food{
-    std::string name;
-    double price;
-    std::vector<std::string> ingredients;
+
+enum class MenuOptions{
+    mainMenu,
+    addMenu,
+    viewMenu,
+    addOrder,
+    viewOrder,
+    checkout,
+    quit,
+
 };
 
 
-struct Menu{
-    std::vector<Food> foods; 
-};
+MenuOptions mainMenu(){
+    std::vector<std::string> messages {
+        "1. Add to Menu",
+        "2. View Menu",
+        "3. Add to Order",
+        "4. View Order",
+        "5. Checkout",
+        "6. Quit"
+    };
 
+    std::copy(messages.begin(), messages.end(),
+                std::ostream_iterator<std::string>(std::cout, "\n"));
+    std::cout << "Your wish is my command: ";
 
-struct Order{
-    std::vector<Food> orders;
-    double totalPrice {0.0};
-};
-
-
-
-// overload order for cout
-std::ostream &operator<<(std::ostream &os, const Order &o) {
-    std::string out {"\nOrder contains:\n"};
-    for (auto &&food : o.orders){
-        out += (food.name + "\n");
-    }
-
-    std::stringstream stream;
-    stream << std::fixed << std::setprecision(2) << o.totalPrice;
-    out += ("Total price: " + stream.str()+ "\n");
-    return os << out;
+    int action {0};
+    std::cin >> action;
+    system("clear");
+    return MenuOptions{action};
 }
 
-// overload menu for cout
-std::ostream &operator<<(std::ostream &os, const Menu &m) {
-    std::string out {"\nMenu contains:\n"};
-    for (auto &&food : m.foods){
-        out += (food.name + "\n");
-    }
-    out += + "\n";
-    return os << out;
-}
-
-
-void addFoodToMenu(const Food& food, Menu& menu){
-    menu.foods.push_back(food);
-}
-
-void addFoodToOrder(const Food& food, Order& order){
-    order.orders.push_back(food);
-    order.totalPrice += food.price;
-}
-
-
-Food createFood(){
-    Food dish;
-    std::cout << "\nCreating a new dish!\n";
-
-    std::cout << "Give dish name: ";
-    std::cin >> dish.name;
-
-    std::cout << "Give price: ";
-    std::cin >> dish.price;
-
-    std::cout << "Give ingredients to prepare dish\n";
-
-    std::string continueLoop;
-    while (continueLoop != "n")
-    {
-        // will jump if not ignored
-        std::cin.ignore(1, '\n');
-        std::cout << "Give next ingredient: ";
-        std::string newIngredient;
-        std::getline(std::cin, newIngredient);
-        dish.ingredients.push_back(newIngredient);
-        
-        std::cout << "Continue? (y/n): ";
-        std::cin >> continueLoop;
-    }
-    
-    return dish;
+bool continuePrompt(const std::string& msg = "Continue?"){
+    char key {' '};
+    std::cout << (msg + " (y/n): ");
+    std::cin >> key;
+    system("clear");
+    return key == 'y';
 }
 
 
 int main(int argc, char const *argv[])
 {
+
     Menu menu;
-    Food food {createFood()};
-    addFoodToMenu(food, menu);
-    addFoodToMenu(food, menu);
-    std::cout << menu;
-
     Order order;
-    addFoodToOrder(food, order);
-    addFoodToOrder(food, order);
-    addFoodToOrder(food, order);
 
-    std::cout << order;
+    MenuOptions action {MenuOptions::mainMenu};
+    system("clear");
 
-    std::cout << "Pick from the menu: ";
-    // read in orders in loop
-    // add to order
-
-
-
-
-
+    while (true)
+    {
+        switch (action)
+        {
+        case MenuOptions::mainMenu:{
+            action = mainMenu();
+            break;
+        }
+        case MenuOptions::addMenu :{
+            updateMenu(menu);
+            action = MenuOptions::mainMenu;
+            break;
+        }
+        case MenuOptions::viewMenu:{
+            std::cout << menu;
+            continuePrompt();
+            action = MenuOptions::mainMenu;
+            break;
+        }
+        case MenuOptions::addOrder:{
+            updateOrder(menu, order);
+            action = MenuOptions::mainMenu;
+            break;
+        }
+        case MenuOptions::viewOrder:{
+            std::cout << order;
+            action = MenuOptions::mainMenu;
+            continuePrompt();
+            break;
+        }
+        case MenuOptions::checkout:{
+            std::cout << order;
+            action = MenuOptions::mainMenu;
+            if(continuePrompt("Checkout?")){
+                order = {};
+            };
+            break;
+        }        
+        case MenuOptions::quit:{
+            if(continuePrompt("Quit?")){return 0;}
+            break;
+        }
+        
+        default: {return 0;}
+        }
+        
+    }
 
     return 0;
 }

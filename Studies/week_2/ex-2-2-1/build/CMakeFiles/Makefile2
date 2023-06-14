@@ -54,16 +54,16 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/build
+CMAKE_SOURCE_DIR = /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1
+CMAKE_BINARY_DIR = /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/restorant.dir/all
+all: CMakeFiles/restaurant.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +71,34 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/restorant.dir/clean
+clean: CMakeFiles/restaurant.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/restorant.dir
+# Target rules for target CMakeFiles/restaurant.dir
 
 # All Build rule for target.
-CMakeFiles/restorant.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/restorant.dir/build.make CMakeFiles/restorant.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/restorant.dir/build.make CMakeFiles/restorant.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/CMakeFiles --progress-num=1,2 "Built target restorant"
-.PHONY : CMakeFiles/restorant.dir/all
+CMakeFiles/restaurant.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/restaurant.dir/build.make CMakeFiles/restaurant.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/restaurant.dir/build.make CMakeFiles/restaurant.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/build/CMakeFiles --progress-num=1,2,3 "Built target restaurant"
+.PHONY : CMakeFiles/restaurant.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/restorant.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/restorant.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/CMakeFiles 0
-.PHONY : CMakeFiles/restorant.dir/rule
+CMakeFiles/restaurant.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/build/CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/restaurant.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/build/CMakeFiles 0
+.PHONY : CMakeFiles/restaurant.dir/rule
 
 # Convenience name for target.
-restorant: CMakeFiles/restorant.dir/rule
-.PHONY : restorant
+restaurant: CMakeFiles/restaurant.dir/rule
+.PHONY : restaurant
 
 # clean rule for target.
-CMakeFiles/restorant.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/restorant.dir/build.make CMakeFiles/restorant.dir/clean
-.PHONY : CMakeFiles/restorant.dir/clean
+CMakeFiles/restaurant.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/restaurant.dir/build.make CMakeFiles/restaurant.dir/clean
+.PHONY : CMakeFiles/restaurant.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
@@ -107,6 +107,7 @@ CMakeFiles/restorant.dir/clean:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
+	$(CMAKE_COMMAND) -P /home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-2-1/build/CMakeFiles/VerifyGlobs.cmake
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
