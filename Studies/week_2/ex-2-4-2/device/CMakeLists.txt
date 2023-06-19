@@ -1,1 +1,0 @@
-add_library(Device device.cpp)
