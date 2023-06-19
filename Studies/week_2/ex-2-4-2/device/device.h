@@ -14,6 +14,7 @@
 namespace modbus{
 
 // constants
+constexpr int                       DEVICE_COUNT            {5};
 constexpr int                       REGISTER_SIZE           {5};
 constexpr int                       REGISTER_DEFAULT_VAL    {0};
 const std::array<std::string, 2>    DEVICE_ROLES[2]         {"master", "slave"};
