@@ -1,0 +1,26 @@
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+./make_tests.cpp:15:
+TEST CASE:  TEST MATH
+
+./make_tests.cpp:17: ERROR: CHECK( sum_wrong(1,1) == 2 ) is NOT correct!
+  values: CHECK( 0 == 2 )
+
+===============================================================================
+[doctest] test cases: 1 | 0 passed | 1 failed | 0 skipped
+[doctest] assertions: 2 | 1 passed | 1 failed |
+[doctest] Status: FAILURE!
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+./make_tests.cpp:15:
+TEST CASE:  TEST MATH
+
+./make_tests.cpp:17: ERROR: CHECK( sum_wrong(1,1) == 2 ) is NOT correct!
+  values: CHECK( 0 == 2 )
+
+===============================================================================
+[doctest] test cases: 1 | 0 passed | 1 failed | 0 skipped
+[doctest] assertions: 2 | 1 passed | 1 failed |
+[doctest] Status: FAILURE!
