@@ -1,0 +1,1 @@
+add_library(BookLibrary library.cpp dialogs.cpp)
