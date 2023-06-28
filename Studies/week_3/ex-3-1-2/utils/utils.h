@@ -3,6 +3,7 @@
 
 #include <string>
 #include <array>
+#include <vector>
 
 
 const std::array<std::string, 4> DATA_HEADERS {"temperature",
@@ -29,7 +30,7 @@ bool isValidReading(int sensor, double reading);
 
 double generateUpdate(double reading);
 
-void updateReading(std::vector<double> &readings);
+void updateReadings(std::vector<double> &readings);
 
 #endif
 // UTILS

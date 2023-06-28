@@ -29,7 +29,6 @@ std::vector<double> generateWeatherData(){
         data.push_back(initSensor(i));
     }
     return data;
-    
 }
 
 bool isValidReading(int sensor, double reading){
@@ -41,12 +40,13 @@ bool isValidReading(int sensor, double reading){
 
 double generateUpdate(double reading){
     reading *=  randomBetween(0.95, 1.05);
+    return reading;
 }
 
-// initialize values to default if they fall outside range
-void  updateReading(std::vector<double>& readings){
+void  updateReadings(std::vector<double>& readings){
 
     for (size_t i = 0; i < DATA_HEADERS.size(); i++){
+         // initialize values to default if they fall outside range
         double newValue = generateUpdate(readings[i]);
         if (isValidReading(i, newValue)){
             readings[i] = newValue;
