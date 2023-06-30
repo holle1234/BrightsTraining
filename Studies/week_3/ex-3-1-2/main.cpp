@@ -1,11 +1,6 @@
 #include "utils/utils.h"
 #include <iostream>
 #include <string>
-#include <algorithm>
-#include <array>
-#include "csv/csv.h"
-#include "utils/utils.h"
-
 
 /* 
 Virtual Weather Station
@@ -22,79 +17,60 @@ Log data in files. Handle any file-related exceptions like not being able to ope
 The console applications should be able to show logs and current weather.
 For testing purposes you can add a function that allows you to manually add weather readings.
 
+
+
+IMPLEMENTATION:
+- updates are -5+5% change from previous readings.
+- readings are stored into csv file. 
+- readings are stored as a vector double while updating
+- readings are converted from double to string while saving or loading
+- console options are -h & -r (history, read).
+- history is updated only via -r command
+
+
+SAMPLE PRINT:
+
+juho@myubuntuenv:~/Desktop/BrightsRepo$ ./.build/weather -h
+Weather history:
+
+|    temp C     ||  humidity %   || windspeed m/s ||      atm      |
+|   -9.04745    ||    73.9873    ||    36.3796    ||   0.966458    |
+|   -8.61061    ||    72.7848    ||    34.8984    ||   0.950965    |
+|   -8.74772    ||    75.9275    ||    33.6984    ||   0.911876    |
+
+
  */
 
 
-const std::array<std::string, 2> CMD_OPTIONS {"-h", "-r"};
-const std::string logpath {"weather.log"};
 
 
-// find option from terminal prompt
-const char** find_option(const char** begin, const char** end, std::string option){
-    return std::find(begin, end, option);
-}
+int main(int argc, char const *argv[]){
 
+    // make sure logs exists
+    init_logs();
 
-StringRow read_logs(bool printall=false){
-    csv::CSVReader logreader {logpath};
-    logreader.open();
-
-    StringRow row;
-    std::cout << "Weather history:\n\n";
-    while (logreader.readLine(row)){
-        std::cout << row << "\n";
+    // print help if no args supplied
+    if (argc == 1){
+        std::cout << "-h    show history\n-r    show current weather\n";
     }
 
-    // last row is the previous weather
-    logreader.close();
-    return row;
-}
-
-void convert_log_to_doubles(StringRow& source, std::vector<double>& dest){
-    for (size_t i = 0; i < source.size(); i++){
-        double value {std::stod(source[i])};
-        dest.push_back(value);
-    }
-}
-
-
-
-
-int main(int argc, char const *argv[])
-{
+    // if some args supplied find and process them
     const char** end {argv+argc};
+    for (auto &&option : CMD_OPTIONS){
+        const char** it = find_option(argv, end, option);
+        if (it == end){
+            continue;
+        }
 
-    // init weatherdata logs
-    if (!std::filesystem::exists(logpath)){
-        std::vector<double> weather = generateWeatherData();
-        csv::CSVWriter logwriter {logpath};
-        logwriter.writeLine(weather.begin(), weather.end());
-    }
+        // print history
+        if (option == CMD_OPTIONS[0]){
+            std::cout << "Weather history:\n\n";
+            print_logs();
+        }
 
-    // process arguments
-    if (argc > 1){
-
-        // if some args supplied find and process them
-        for (auto &&option : CMD_OPTIONS){
-            const char** it = find_option(argv, end, option);
-
-            if (it != end){
-
-                // print history
-                if (option == CMD_OPTIONS[0]){
-                    read_logs(true);
-                }
-
-                // show current weather
-                else if(option == CMD_OPTIONS[1]){
-                    std::vector<double> reading_dest;
-                    StringRow row = read_logs(false);
-                    convert_log_to_doubles(row, reading_dest);
-                    updateReadings(reading_dest);
-                    std::cout << "Current Weather:\n" << row;
-                    
-                }
-            }
+        // show current weather
+        if (option == CMD_OPTIONS[1]){
+            read_log_last_entry();
         }
         
     }

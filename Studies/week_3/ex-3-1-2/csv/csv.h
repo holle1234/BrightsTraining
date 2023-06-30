@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <string>
-#include <array>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
@@ -13,22 +12,20 @@
 #include <iomanip>
 
 
-namespace fs = std::filesystem;
-
-using StringRow = std::vector<std::string>;
-
-
-std::ostream& operator<<(std::ostream& os, StringRow& row){
-    for (auto it = row.begin(); it != row.end(); it++){
-        os << std::setprecision(5) << *it;
-    }
-    return os;
-}
-
-
-
 // all accessable via csv::
 namespace csv {
+
+
+// shorter reference to this namespace
+namespace fs = std::filesystem;
+
+// simplifies the usage of writer and reader
+using StringRow = std::vector<std::string>;
+
+// print row of csv formated as table
+void pretty_print(csv::StringRow row, int max_size);
+
+
 
 class CSVReader{
     private:
@@ -38,7 +35,11 @@ class CSVReader{
         std::string filepath;
         std::fstream fileObj;
         bool ignoreHeader{false};
-        bool _isOpen {false};
+
+        // used to ignore header
+        void readLine(){
+            std::getline(fileObj, rawRow);
+        }
 
     public:
         CSVReader(std::string filepath, bool ignoreHeader = false)
@@ -64,7 +65,6 @@ class CSVReader{
 
             // read one line early so it seem ignored to the caller
             if (ignoreHeader){readLine();}
-            _isOpen = true;
 
             return true;
         }
@@ -74,33 +74,62 @@ class CSVReader{
             fileObj.close();
         }
 
-        // used to ignore header
-        void readLine()
-        {
-            std::getline(fileObj, rawRow);
-        }
-
         // read one line of csv file
         bool readLine(StringRow &dest)
         {
-            // clear containers
+            // check if there is something to read
+            if (!bool(fileObj)){return false;}
+
+            // read raw string line
+            std::getline(fileObj, rawRow);
+
+            // clear storages for new data
+            wordStream.str("");
+
+            // split string line to words
+            split_to_words(rawRow, dest);
+
+            return true;
+        }
+
+        void split_to_words(std::string& rawRaw, StringRow &dest){
             wordStream.clear();
             dest.clear();
 
-            // read raw string line
-            if (std::getline(fileObj, rawRow))
+            // split string line to words
+            wordStream << rawRow;
+            while (std::getline(wordStream, word, ','))
             {
-                // split string to out vector
-                wordStream << rawRow;
-                while (std::getline(wordStream, word, ','))
-                {
-                    dest.push_back(word);
-                }
-            };
-            
-            _isOpen = bool(fileObj);
-            return _isOpen;
+                dest.push_back(word);
+            }
         }
+
+        // gets the last line of data from csv
+        void read_last_line(StringRow &dest){
+
+            // csv has a newline at the last position
+            // seekg further -2
+            fileObj.seekg(-2, std::ios_base::end); 
+
+            while(true) {
+                char ch;
+                fileObj.get(ch);
+
+                if (int(fileObj.tellg()) <= 1) {
+                    fileObj.seekg(0); 
+                    break;    
+                }
+                else if (ch == '\n') { 
+                    break;
+                }
+                else {
+                    fileObj.seekg(-2, std::ios_base::cur);
+                }
+            }
+           
+           readLine(dest);
+        }
+
 };
 
 
@@ -147,17 +176,22 @@ class CSVWriter{
         }
 
         // write one line of csv file
-        template<typename Iterator>
-        void writeLine(Iterator begin, Iterator end)
-        {
-            std::string line;
-            auto it = begin;
-            for (; it != (end - 1); it++)
-            {
-                line += (*it + ",");
+        template<typename It>
+        void writeLine(It begin, It end){
+            if (!fileObj.is_open()){
+                throw std::invalid_argument("could not open file " + filepath);
             }
-            line += (*it + "\n");
-            fileObj << line;
+
+            std::stringstream line;
+            for (auto it = begin; it != end; it++){
+                line << *it << ",";
+            }
+
+            // add new line and replace last ',' with '\n'
+            std::string row {line.str()};
+            row.resize(row.size() - 1);
+            //row.replace(row.size() - 1, 1, "\n");
+            fileObj << row << "\n" ; 
         }
 
 };
