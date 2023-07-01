@@ -1,3 +1,0 @@
-/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-4-1/build/CMakeFiles/lorem.dir
-/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-4-1/build/CMakeFiles/edit_cache.dir
-/home/juho/Desktop/BrightsRepo/Studies/week_2/ex-2-4-1/build/CMakeFiles/rebuild_cache.dir
