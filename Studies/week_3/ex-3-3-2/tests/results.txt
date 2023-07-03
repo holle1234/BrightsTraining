@@ -1,0 +1,30 @@
+[doctest] doctest version is "2.4.11"
+[doctest] run with "--help" for options
+===============================================================================
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:8:
+TEST CASE:  MATH FUNCTIONS TESTS
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:9: MESSAGE: Testing add
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:14: MESSAGE: Testing substract
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:19: MESSAGE: Testing multiply
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:24: MESSAGE: Testing devide
+
+===============================================================================
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:34:
+TEST CASE:  STRING FUNCTIONS TESTS
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:36: MESSAGE: Testing reverse str
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:42: MESSAGE: Testing toupper str
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:49: MESSAGE: Testing tolower str
+
+Studies/week_3/ex-3-3-2/tests/make_tests.cpp:56: MESSAGE: Testing palindrome str
+
+===============================================================================
+[doctest] test cases:  2 |  2 passed | 0 failed | 0 skipped
+[doctest] assertions: 34 | 34 passed | 0 failed |
+[doctest] Status: SUCCESS!
