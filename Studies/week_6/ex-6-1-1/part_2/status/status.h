@@ -14,7 +14,7 @@ enum class Status {
 };
 
 
-const std::array<std::string, 5> StrStatus{"ordered","received","processed","packed","delivered"};                                              
+constexpr static std::array<std::string_view, 5> StrStatus{"ordered","received","processed","packed","delivered"};
 
 
 
