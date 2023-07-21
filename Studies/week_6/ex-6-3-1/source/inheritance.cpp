@@ -1,10 +1,21 @@
 #include "inheritance.h"
 #include <string>
+#include <memory>
 
 
+std::ostream &operator<<(std::ostream &os, const Eyes &e)
+{
+    return os << e.eysight;
+}
 
+std::ostream &operator<<(std::ostream &os, const Wings &w)
+{
+    return os << std::boolalpha << w.flyable;
+}
 
-std::ostream &operator<<(std::ostream &os, const Animal &a){
+// not able get derived class member variables cause its not virtual
+std::ostream &operator<<(std::ostream &os, const Animal &a)
+{
 
     os << "Animal type ";
     if (a.animal_type == AnimalType::dog){
@@ -13,13 +24,17 @@ std::ostream &operator<<(std::ostream &os, const Animal &a){
     else if (a.animal_type == AnimalType::parrot){
         os << "Parrot: ";
     }
+    else if (a.animal_type == AnimalType::penquine){
+        os << "Penquine: ";
+    }
     
     os << "name: " << a.name << " ";
-    os << "eye sight: " << a.eye_sight << " ";
+    os << "eye sight: " << a.eyes << " ";
     os << "can fly: " << std::boolalpha << a.can_fly << " ";
     os << "says : " << a.speach;
     return os;
 }
+
 
 // Spawns a factory object that can create only certain type of objects
 God God::spawn(AnimalType creator_type){
@@ -27,11 +42,30 @@ God God::spawn(AnimalType creator_type){
 }
 
 // interaction method for creating objects
-Animal God::create_animal(std::string name){
+auto God::create_animal(std::string name) -> std::unique_ptr<Animal>{
+
     if (creator_type == AnimalType::dog){
-        return;
+        return std::make_unique<Dog>(name);
     }
     else if (creator_type == AnimalType::parrot){
-        return;
+        return std::make_unique<Parrot>(name);
     }
+    else if (creator_type == AnimalType::penquine){
+        return std::make_unique<Penquine>(name);
+    }
+
+    return std::make_unique<UnknownAnimal>(name);
+}
+
+std::string& Parrot::speak()
+{
+    if(last_greeting.empty()){
+        return Animal::speak();
+    }
+    return Parrot::last_greeting;
+}
+
+void Parrot::greet(std::string greeting)
+{
+    this->last_greeting = greeting;
 }
