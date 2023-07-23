@@ -3,39 +3,6 @@
 #include <memory>
 
 
-std::ostream &operator<<(std::ostream &os, const Eyes &e)
-{
-    return os << e.eysight;
-}
-
-std::ostream &operator<<(std::ostream &os, const Wings &w)
-{
-    return os << std::boolalpha << w.flyable;
-}
-
-// not able get derived class member variables cause its not virtual
-std::ostream &operator<<(std::ostream &os, const Animal &a)
-{
-
-    os << "Animal type ";
-    if (a.animal_type == AnimalType::dog){
-        os << "Dog: ";
-    }
-    else if (a.animal_type == AnimalType::parrot){
-        os << "Parrot: ";
-    }
-    else if (a.animal_type == AnimalType::penquine){
-        os << "Penquine: ";
-    }
-    
-    os << "name: " << a.name << " ";
-    os << "eye sight: " << a.eyes << " ";
-    os << "can fly: " << std::boolalpha << a.can_fly << " ";
-    os << "says : " << a.speach;
-    return os;
-}
-
-
 // Spawns a factory object that can create only certain type of objects
 God God::spawn(AnimalType creator_type){
     return God {creator_type};
@@ -57,6 +24,38 @@ auto God::create_animal(std::string name) -> std::unique_ptr<Animal>{
     return std::make_unique<UnknownAnimal>(name);
 }
 
+// All derived classes can use this
+std::ostream &operator<<(std::ostream &os, Animal &a){
+    return a.repr(os);
+}
+
+// Common to all derived classes of Animal
+std::ostream& Animal::repr(std::ostream &os){
+    os << "Animal type: Animal ";
+    os << "Name: " << this->name  << " ";
+    os << "Eye sight: " << this->eysight << " ";
+    os << "Says: '" << this->speach << "'";
+    return os;
+}
+// Common to all derived classes of Bird
+std::ostream& Bird::repr(std::ostream &os){
+    os << "Animal type: Bird ";
+    os << "Name: " << this->name << " ";
+    os << "Eye sight: " << this->eysight << " ";
+    os << "Says: '" << this->speach << "'";
+    return os;
+}
+
+// Parrot specific implentation
+std::ostream& Parrot::repr(std::ostream &os){
+    os << "Animal type: Parrot ";
+    os << "Name: " << this->name << " ";
+    os << "Eye sight: " << this->eysight << " ";
+    os << "Says: '" << this->speach << "'";
+    return os;
+}
+
+
 std::string& Parrot::speak()
 {
     if(last_greeting.empty()){
@@ -65,7 +64,26 @@ std::string& Parrot::speak()
     return Parrot::last_greeting;
 }
 
+
 void Parrot::greet(std::string greeting)
 {
     this->last_greeting = greeting;
 }
+
+void Dog::virtual_print()
+{
+    std::cout << "virtual_print() from Dog class. "
+                << "Access to Dog 'isagoodboy' bool member: " << isagoodboy << "\n";
+}
+
+void Dog::test_print()
+{
+    std::cout << "test_print() from Dog class\n";
+}
+
+void Dog::call_base_method()
+{
+    std::cout << "Dog calling Animal class test_print() using 'Animal::'\n";
+    Animal::test_print();
+}
+

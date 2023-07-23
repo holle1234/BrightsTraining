@@ -1,7 +1,7 @@
 #include <string>
 #include <ostream>
 #include <memory>
-
+#include <iostream>
 
 #if !defined(INHERITANCE)
 #define INHERITANCE
@@ -16,42 +16,43 @@ class Eyes
 {
 public:
     int eysight {10};
-    Eyes(int vision) : eysight(vision) {}
+    Eyes(int vision) : eysight(vision) {std::cout << "Created Eyes\n";}
     Eyes() : eysight(10) {}
-    ~Eyes() {}
-    friend std::ostream& operator<<(std::ostream& os, const Eyes& e);
+    ~Eyes() {std::cout << "Destroyed Eyes\n";}
 };
 
 class Wings
 {
 public:
     bool flyable {false};
-    Wings(bool can_fly) : flyable(can_fly) {}
+    Wings(bool can_fly) : flyable(can_fly) {std::cout << "Created Wings\n";}
     Wings() : flyable(false){}
-    ~Wings() {}
-    friend std::ostream& operator<<(std::ostream& os, const Wings& w);
+    ~Wings() {std::cout << "Destroyed Wings\n";}
 };
 
 
 
-class Animal
+class Animal : public Eyes
 {
-
-
 public:
     AnimalType animal_type;
-
-    bool can_fly;
-    Eyes eyes;
     std::string speach;
     std::string name;
 
     Animal(AnimalType animal) : animal_type(animal) {}
+    Animal() = default;
     ~Animal() {}
 
-    friend std::ostream& operator<<(std::ostream& os, const Animal& p);
+    // friend functions or operator<< cant be overriden.
+    // We can make a virtual function that is called in the friend
+    friend std::ostream& operator<<(std::ostream& os, Animal& a);
+    virtual std::ostream&  repr(std::ostream& os);
+
     virtual std::string& speak(){return this->speach;};
     virtual void greet(std::string greeting){};
+
+    void test_print(){std::cout << "test_print() from Animal class\n";}
+    virtual void virtual_print(){"virtual_print() from Animal class\n";}
 };
 
 
@@ -68,39 +69,14 @@ public:
 };
 
 
-class UnknownAnimal : public Animal
+// Base class for all the bird types
+class Bird : public Animal, public Wings
 {
 public:
-    UnknownAnimal(std::string name) : Animal(AnimalType::unknown){
-        this->name = name;
-        this->eyes = Eyes(0);
-        this->speach = "--";
-        this->can_fly = false;
-    }
-    ~UnknownAnimal() {}
-};
-
-class Dog : public Animal
-{
-public:
-    bool isagoodboy {true};
-
-    Dog(std::string name, bool goooddog = true) : isagoodboy(goooddog), Animal(AnimalType::dog){
-        this->name = name;
-        this->eyes = Eyes(0); // blind dog
-        this->speach = "wufwuf";
-        this->can_fly = false;
-    }
-    ~Dog() {}
-};
-
-
-class Bird : public Animal
-{
-public:
-    Wings wings;
-    Bird(AnimalType animal) : Animal(animal) {}
+    Bird(AnimalType animal, bool can_fly=true) : Animal(animal), Wings(can_fly){}
     ~Bird() {}
+
+    std::ostream&  repr(std::ostream& os) override;
 };
 
 
@@ -110,18 +86,16 @@ private:
     std::string last_greeting;
 
 public:
-    Parrot(std::string name) : Bird(AnimalType::parrot) {
+    Parrot(std::string name) : Bird(AnimalType::parrot, true) {
         this->name = name;
-        this->eyes = Eyes(5);
+        this->eysight = 5;
         this->speach = "kruakszz";
-        this->can_fly = true;
-        this->wings = Wings(true);
     }
     ~Parrot() {}
 
+    std::ostream&  repr(std::ostream& os) override;
     void greet(std::string greeting) override;
     std::string& speak() override;
-
 };
 
 
@@ -130,16 +104,44 @@ class Penquine : public Bird
 
 public:
 
-    Penquine(std::string name) : Bird(AnimalType::penquine) {
+    Penquine(std::string name) : Bird(AnimalType::penquine, false) {
         this->name = name;
-        this->eyes = Eyes(10);
+        this->eysight = 10;
         this->speach = "g'day..";
-        this->can_fly = false;
-        this->wings = Wings(false);
     }
     ~Penquine() {}
 
 };
+
+class UnknownAnimal : public Animal
+{
+public:
+    UnknownAnimal(std::string name) : Animal(AnimalType::unknown){
+        this->name = name;
+        this->eysight = 0;
+        this->speach = "--";
+    }
+    ~UnknownAnimal() {}
+};
+
+class Dog : public Animal
+{
+public:
+
+    bool isagoodboy {true};
+
+    void virtual_print() override;
+    void test_print();
+    void call_base_method();
+
+    Dog(std::string name, bool goooddog = true) : isagoodboy(goooddog), Animal(AnimalType::dog){
+        this->name = name;
+        this->eysight = 5;
+        this->speach = "wufwuf";
+    }
+    ~Dog() {}
+};
+
 
 
 
