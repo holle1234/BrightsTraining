@@ -133,18 +133,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Uint& u);
 
 private:
-    unsigned int to_range(long x){
-        // below zero. cast to T type to avoid auto conversion
-        if(x < umin){
-            return umin;
-        }
-        // greater than umax
-        else if (x > umax){
-            return umax;
-        }
-        // ok
-        return static_cast<unsigned int>(x);
-    }
+    unsigned int to_range(long x);
 
 };
 

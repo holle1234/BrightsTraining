@@ -32,21 +32,15 @@ private:
 
 public:
 
-    FileHandle(std::string path, std::string mode = "r") : filepath(path), mode(mode) {
-        fp = std::fopen(filepath.c_str(), mode.c_str());
-        std::rewind(fp);
-        state = FileState::open;
-    }
-    ~FileHandle() {std::fclose(fp); fp=nullptr; state = FileState::closed;}
+    FileHandle(std::string path, std::string mode = "r");
+    ~FileHandle();
 
     const std::string& readline();
     const std::string& last_row();
     int size();
     bool is_open();
 
-    operator bool(){
-        return is_open();
-    }
+    operator bool(){return is_open();}
 };
 
 
