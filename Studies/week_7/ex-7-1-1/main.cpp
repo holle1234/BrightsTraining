@@ -7,24 +7,28 @@
 
 int main(int argc, char const *argv[])
 {
-    std::vector<std::string> a;
+    const std::vector<std::string> a;
     std::vector<std::string> b;
     std::vector<int> c;
 
-    int v = {0};
-    int* ip = &v;
-    float f {0.0};
-    float* flp = &f;
+    // ex-1
+    std::cout << std::boolalpha << is_same_type<int, int>; // false
+    std::cout << "\n";
+    std::cout << std::boolalpha << is_same_type<int, const int>; // true
+    std::cout << "\n";
+    std::cout << std::boolalpha << is_same_type<int, float>; // false
+    std::cout << "\n";
+    std::cout << std::boolalpha << is_same_type<int, int*>; // true
+    std::cout << "\n";
+    std::cout << std::boolalpha << is_same_type<int, int&>; // false
+    std::cout << "\n";
+    std::cout << std::boolalpha << is_same_type<int, int&&>; // true
+    std::cout << "\n\n";
 
+    // ex-2
+    std::cout << std::boolalpha << can_decay<const int*&>; // true
+    std::cout << "\n";
+    std::cout << std::boolalpha << can_decay<const int*>; // false
 
-    std::cout << std::boolalpha << is_same_type(a, c); // false
-    std::cout << "\n";
-    std::cout << std::boolalpha << is_same_type(a, b); // true
-    std::cout << "\n";
-    std::cout << std::boolalpha << is_same_type(ip, v); // false
-    std::cout << "\n";
-    std::cout << std::boolalpha << is_same_type(&f, flp); // true
-    std::cout << "\n";
-    std::cout << std::boolalpha << is_same_type(ip, c); // false
     return 0;
 }
