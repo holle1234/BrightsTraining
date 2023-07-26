@@ -16,6 +16,7 @@ int main(int argc, char const *argv[])
     std::cout << std::boolalpha << check_format(print_formats[4], 1U, 2LU) << "\n"; // unsigned int  
 
     Example ex {2,3,3,5};
+    ex.require_count(1,1,1,1);
     std::cout << ex.parameter_count();
 
 

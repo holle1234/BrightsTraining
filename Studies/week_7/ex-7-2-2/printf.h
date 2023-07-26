@@ -53,6 +53,11 @@ struct Example
     size_t parameter_count(){
         return size;
     }
+
+    template<typename... Ts>
+    void require_count(Ts... params){
+        static_assert(sizeof...(Ts) == size);
+    }
 };
 
 template <typename... Ts>
