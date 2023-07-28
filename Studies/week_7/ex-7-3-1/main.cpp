@@ -1,14 +1,15 @@
 #include "crtp.h"
 #include <iostream>
 #include <vector>
+#include <memory>
 
 
 int main(int argc, char const *argv[])
 {
     //Ex 1.
-    Cat* acat = new Cat(1);
-    Cat* bcat = new Cat(2);
-    Dog* adog = new Dog;
+    std::unique_ptr<Cat> acat = std::make_unique<Cat>(1);
+    std::unique_ptr<Cat> bcat = std::make_unique<Cat>(2);
+    std::unique_ptr<Dog> adog = std::make_unique<Dog>(1);
     std::cout << ((*acat) == (*bcat)) << "\n";
 
 
@@ -26,5 +27,9 @@ int main(int argc, char const *argv[])
     acat->type_of();
     adog->type_of();
 
+    for (auto &&i : animals){
+        delete i;
+    }
+    
     return 0;
 }
