@@ -48,23 +48,13 @@ bool all_the_same(T value, Ts... args){
     return std::conjunction_v<std::is_same<T, Ts>...>;
 }
 
-//Exercise 4. (2.)
-template<typename T, typename... Ts>
-T _product(T value, Ts... args){
+//Exercise 4.
+template<typename T, typename... Ts, typename std::enable_if_t<(... && std::is_same_v<T, Ts>), int > = 0>
+T size_product(T first, Ts... rest){
     if constexpr(sizeof...(Ts) > 0){
-        return value * _product(args...);
+        return (sizeof...(Ts) + 1) * first * (rest * ...);
     }
-    return value;
-}
-
-//Exercise 4. (1.)
-template<typename T, typename... Ts,
-    typename std::enable_if_t<std::conjunction_v<std::is_same<T, Ts>...> && std::is_arithmetic_v<T>, int> = 0>
-T product(T value, Ts... args){
-    if constexpr(sizeof...(Ts) > 0){
-        return (sizeof...(Ts) + 1) * value * _product(args...);
-    }
-    return value;
+    return first;
 }
 
 //Exercise 5.
