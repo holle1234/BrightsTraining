@@ -12,8 +12,8 @@ int main(int argc, char const *argv[])
     std::cout << std::boolalpha << all_the_same(0, 10, 2.0f) << "\n"; // false
 
     // products
-    std::cout << product(2.5, 2.5) << "\n"; // 12.5
-    //std::cout << product(2, 2.5) << "\n"; // 12.5 error: must be same type
+    std::cout << size_product(2.5, 2.5) << "\n"; // 12.5
+    //std::cout << size_product(2, 2.5) << "\n"; // 12.5 error: must be same type
     std::cout << std::boolalpha << product(true, true, true) << "\n"; // true
     std::cout << std::boolalpha << product(true, false, true) << "\n"; // false
 
