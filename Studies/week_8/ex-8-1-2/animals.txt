@@ -1,0 +1,6 @@
+Cat
+Dog
+Penquine
+Parrot
+Rhino
+Lizard
