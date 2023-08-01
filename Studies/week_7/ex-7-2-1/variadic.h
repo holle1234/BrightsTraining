@@ -11,11 +11,11 @@ int print1a(T value){
     std::cout << value << "\n";
     return 1;
 }
-
+// Exercise 1a. (returns depth of recursion too)
 template<typename T, typename... Ts>
 int print1a(T value, Ts... args){
     std::cout << value << " ";
-    return 1 + print(args...);
+    return 1 + print1a(args...);
 }
 
 // Exercise 1b.
