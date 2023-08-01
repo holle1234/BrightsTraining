@@ -49,6 +49,8 @@ bool all_the_same(T value, Ts... args){
 }
 
 //Exercise 4.
+// Get product of arguments and the size of the argument list
+// Allow only if all the arguments are the same type
 template<typename T, typename... Ts, typename std::enable_if_t<(... && std::is_same_v<T, Ts>), int > = 0>
 T size_product(T first, Ts... rest){
     if constexpr(sizeof...(Ts) > 0){
