@@ -6,6 +6,7 @@
 #include <ostream>
 #include <tuple>
 #include <algorithm>
+#include <iostream>
 
 
 template<typename T>
@@ -61,6 +62,12 @@ protected:
 public:
     GridSize(unsigned int width, unsigned int height) : w(width), h(height) {}
     ~GridSize() {}
+    
+    // move constructor
+    GridSize(GridSize&& rhs) = default;
+
+    // move-assignment
+    GridSize& operator=(GridSize&& rhs) = default;
 };
 
 
@@ -85,6 +92,24 @@ public:
 private:
     storage_type data;
 public:
+
+    MyContainer& operator=(MyContainer&& rhs) noexcept {
+        data = std::move(rhs.data);
+        initial_value = std::move(rhs.initial_value);
+        return *this;
+    }
+
+    MyContainer(MyContainer&& rhs) noexcept
+        : data(std::move(rhs.data)),
+          initial_value(std::move(rhs.initial_value)),
+          GridSize(std::move(rhs)) {
+    }
+
+    MyContainer& operator=(const MyContainer& rhs){
+        data = rhs.data;
+        initial_value = rhs.initial_value;
+        return *this;
+    }
 
     MyContainer(unsigned int width, unsigned int height, T init_value) : GridSize(width, height) {
         initial_value = init_value;
