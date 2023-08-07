@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
-
+#include <limits>
 
 template<size_t S, typename T>
 class MyContainer
@@ -124,7 +124,7 @@ public:
     }
 
     size_t max_size(){
-        return sizeof(size_t);
+        return std::numeric_limits<size_t>::max();
     }
 
 };
