@@ -35,6 +35,10 @@ private:
    char TaggedAccess_to_char(TaggedAccess t);
 
 public:
+   Data() = default;
+   Data(std::string_view value){
+      set(value);
+   }
 
    bool set(std::string_view value);
    TaggedResult get() const;

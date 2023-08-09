@@ -35,18 +35,27 @@ void cfile::FileHandle::set_state(){
 const std::string &cfile::FileHandle::readline()
 {
     // move chunks from temp
+    ss.str("");
+    ss.clear();
+
     char buffer[100];
+    std::stringstream::pos_type cpb, cpa;
     while (std::fgets(buffer, 100, fp)){
+
+        cpb = ss.tellp();
         ss << buffer;
+        cpa = ss.tellp();
 
         set_state();
-        if(!is_open() || sizeof(buffer) / sizeof(buffer[0]) < 100){
+        auto size = ((cpa - cpb) / sizeof(char)) - 1;
+        if (size < 100){
             break;
         }
     }
 
+    set_state();
     row = ss.str();
-    ss.clear();
+    
     return row;
 }
 

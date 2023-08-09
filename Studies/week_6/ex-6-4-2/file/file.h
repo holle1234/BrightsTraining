@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <filesystem>
 
 
 namespace cfile
@@ -34,6 +35,10 @@ private:
 public:
 
     FileHandle(std::string path, std::string mode = "r") : filepath(path), mode(mode) {
+        if (!std::filesystem::exists(path)){
+            throw std::invalid_argument("No file found with name " + path);
+        }
+        
         fp = std::fopen(filepath.c_str(), mode.c_str());
         std::rewind(fp);
         state = FileState::open;
