@@ -1,1 +1,0 @@
-        else if(b > (umax - value)){
