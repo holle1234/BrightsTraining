@@ -52,12 +52,13 @@ void user_logger(){
 
 int main(int argc, char const *argv[])
 {
+    
     std::thread auto_thread(auto_logger);
     std::thread user_thread(user_logger);
     auto_thread.join();
     user_thread.join();
 
     std::cout << "Both threads have terminated\n";
-
+ 
     return 0;
 }
